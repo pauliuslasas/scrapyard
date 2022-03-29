@@ -1,0 +1,302 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.3.0",
+    "title": "Part scrapyard",
+    "description": "See how much your parts have rusted sitting outside",
+    "contact": {
+      "name": "Paulss",
+      "email": "paulss@test.com"
+    }
+  },
+
+  "servers": [
+    {
+      "url": "http://localhost:3000/",
+      "description": "Local server"
+    }
+  ],
+  "paths": {
+    "/api/v1/parts": {
+      "get": {
+        "tags": ["Parts CRUD operations"],
+        "description": "Get all Parts",
+        "responses": {
+          "200": {
+            "description": "Parts were obtained",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Parts"
+                },
+                "example": {
+                  "name": "BMW",
+                  "type": "METAL",
+                  "age": 7,
+                  "rustiness": 69,
+                  "quality": 100,
+                  "price": 80
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "status": 500,
+                  "type": "Error",
+                  "message": "Internal_Server_Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Parts CRUD operations"],
+        "description": "Add a single Part",
+        "operationId": "addPart",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Part",
+            "required": true,
+            "description": "Add a single part by providing name, type, age, rustiness, quality and price",
+            "schema": {
+              "$ref": "#/components/schemas/Part"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Part"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Part was added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Parts"
+                },
+                "example": {
+                  "status": 200,
+                  "message": "Part Added"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                },
+                "example": {
+                  "type": "body",
+                  "message": "ValidationError: \"name\" is required."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "status": 500,
+                  "type": "Error",
+                  "message": "Internal_Server_Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/parts/{id}": {
+      "get": {
+        "tags": ["Parts CRUD operations"],
+        "description": "Get one Part",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "ID is required in params to get one part"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Part was obtained",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Part"
+                },
+                "example": {
+                  "status": 200,
+                  "responseData": {
+                    "id": 2,
+                    "name": "BMW",
+                    "type": "METAL",
+                    "age": 7,
+                    "rustiness": 69,
+                    "quality": 100,
+                    "price": 80
+                  },
+                  "message": "Here you go"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                },
+                "example": {
+                  "type": "params",
+                  "message": "ValidationError: \"id\" is required."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "status": 404,
+                  "type": "Error",
+                  "message": "Part not found with id: "
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "status": 500,
+                  "type": "Error",
+                  "message": "Internal_Server_Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "name": {
+        "type": "string",
+        "example": "BMW"
+      },
+      "type": {
+        "type": "string",
+        "example": "METAL"
+      },
+      "age": {
+        "type": "number",
+        "example": "7"
+      },
+      "rustiness": {
+        "type": "number",
+        "example": "69"
+      },
+      "quality": {
+        "type": "number",
+        "example": "100"
+      },
+      "price": {
+        "type": "number",
+        "example": "80"
+      },
+      "Part": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/name"
+          },
+          "type": {
+            "$ref": "#/components/schemas/type"
+          },
+          "age": {
+            "$ref": "#/components/schemas/age"
+          },
+          "rustiness": {
+            "$ref": "#/components/schemas/rustiness"
+          },
+          "quality": {
+            "$ref": "#/components/schemas/quality"
+          },
+          "price": {
+            "$ref": "#/components/schemas/price"
+          }
+        }
+      },
+      "Parts": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "$ref": "#/components/schemas/Part"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
